@@ -1,0 +1,235 @@
+/* eslint-disable @next/next/no-img-element */
+"use client";
+
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import Markdown from "react-markdown";
+
+function ProjectImage({ src, alt }: { src: string; alt: string }) {
+  const [imageError, setImageError] = useState(false);
+
+  if (!src || imageError) {
+    return <div className="w-full h-48 bg-muted" />;
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="w-full h-48 object-cover"
+      onError={() => setImageError(true)}
+      loading="lazy"
+    />
+  );
+}
+
+function getTagColorClass(tag: string): string {
+  const t = tag.toLowerCase();
+  
+  // IoT & Hardware (Green)
+  if (
+    t.includes("mqtt") ||
+    t.includes("esp32") ||
+    t.includes("rfid") ||
+    t.includes("arduino") ||
+    t.includes("c/c++") ||
+    t.includes("iot") ||
+    t.includes("raspberry") ||
+    t.includes("hardware") ||
+    t.includes("firmware")
+  ) {
+    return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20";
+  }
+  
+  // Backend, DB & APIs (Blue)
+  if (
+    t.includes("fastapi") ||
+    t.includes("python") ||
+    t.includes("node") ||
+    t.includes(".net") ||
+    t.includes("c#") ||
+    t.includes("sql") ||
+    t.includes("postgres") ||
+    t.includes("supabase") ||
+    t.includes("mysql") ||
+    t.includes("api") ||
+    t.includes("websocket") ||
+    t.includes("webrtc") ||
+    t.includes("php") ||
+    t.includes("oauth") ||
+    t.includes("db")
+  ) {
+    return "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20";
+  }
+  
+  // Frontend, UI & Design (Purple)
+  if (
+    t.includes("react") ||
+    t.includes("next") ||
+    t.includes("typescript") ||
+    t.includes("javascript") ||
+    t.includes("html") ||
+    t.includes("css") ||
+    t.includes("tailwind") ||
+    t.includes("shadcn") ||
+    t.includes("flutter") ||
+    t.includes("dart") ||
+    t.includes("wpf") ||
+    t.includes("design") ||
+    t.includes("canva") ||
+    t.includes("wordpress") ||
+    t.includes("slide") ||
+    t.includes("markdown")
+  ) {
+    return "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20";
+  }
+  
+  // Cloud, DevOps, Tools & AI (Amber/Indigo)
+  return "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20";
+}
+
+interface Props {
+  title: string;
+  href?: string;
+  description: string;
+  dates: string;
+  role?: string;
+  tags: readonly string[];
+  link?: string;
+  image?: string;
+  video?: string;
+  links?: readonly {
+    icon: React.ReactNode;
+    type: string;
+    href: string;
+  }[];
+  className?: string;
+}
+
+export function ProjectCard({
+  title,
+  href,
+  description,
+  dates,
+  role,
+  tags,
+  image,
+  video,
+  links,
+  className,
+}: Props) {
+  const hasMedia = Boolean(video || image);
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col h-full border border-border rounded-xl overflow-hidden hover:ring-2 hover:ring-muted transition-all duration-200",
+        className
+      )}
+    >
+      {hasMedia && (
+        <div className="relative shrink-0">
+          {href ? (
+            <Link
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+              aria-label={`Open ${title}`}
+            >
+              {video ? (
+                <video
+                  src={video}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-48 object-cover"
+                />
+              ) : (
+                <ProjectImage src={image ?? ""} alt={title} />
+              )}
+            </Link>
+          ) : video ? (
+            <video
+              src={video}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-48 object-cover"
+            />
+          ) : (
+            <ProjectImage src={image ?? ""} alt={title} />
+          )}
+        </div>
+      )}
+      <div className="p-6 flex flex-col gap-3 flex-1">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex flex-col gap-1">
+            <h3 className="font-semibold">{title}</h3>
+            <time className="text-xs text-muted-foreground">{dates}</time>
+          </div>
+          {href && (
+            <Link
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+              aria-label={`Open ${title}`}
+            >
+              <ArrowUpRight className="h-4 w-4" aria-hidden />
+            </Link>
+          )}
+        </div>
+        {role && (
+          <p className="text-xs text-muted-foreground">
+            <span className="font-medium text-foreground">Role:</span> {role}
+          </p>
+        )}
+        <div className="text-xs flex-1 prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
+          <Markdown>{description}</Markdown>
+        </div>
+        {tags && tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-auto">
+            {tags.map((tag) => (
+              <Badge
+                key={tag}
+                className={cn(
+                  "text-[11px] font-medium border h-6 w-fit px-2 transition-colors",
+                  getTagColorClass(tag)
+                )}
+                variant="outline"
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
+        {links && links.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {links.map((link, idx) => (
+              <Link
+                href={link.href}
+                key={idx}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Badge
+                  className="flex items-center gap-1.5 text-xs"
+                  variant="default"
+                >
+                  {link.icon}
+                  {link.type}
+                </Badge>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
