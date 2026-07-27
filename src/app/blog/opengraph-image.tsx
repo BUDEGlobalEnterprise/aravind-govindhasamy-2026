@@ -1,4 +1,4 @@
- 
+export const dynamic = "force-static";
 import { ImageResponse } from "next/og";
 import { getOgAvatar } from "@/lib/og-avatar";
 

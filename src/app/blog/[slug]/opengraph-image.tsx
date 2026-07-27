@@ -1,5 +1,10 @@
- 
+export const dynamic = "force-static";
 
+export async function generateStaticParams() {
+    return allPosts.map((post) => ({
+        slug: post._meta.path.replace(/\.mdx$/, ""),
+    }));
+}
 import { ImageResponse } from "next/og";
 import { allPosts } from "content-collections";
 import { getOgAvatar } from "@/lib/og-avatar";
