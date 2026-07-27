@@ -112,8 +112,8 @@ export default function RootLayout({
           </TooltipProvider>
           </MotionProvider>
         </ThemeProvider>
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        {(process.env.NEXT_PUBLIC_GA_ID || "G-35LGEDHBKB") && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-35LGEDHBKB"} />
         )}
       </body>
     </html>
