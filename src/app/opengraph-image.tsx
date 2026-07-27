@@ -3,7 +3,6 @@ import { ImageResponse } from "next/og";
 import { DATA } from "@/data/resume";
 import { getOgAvatar } from "@/lib/og-avatar";
 
-export const runtime = "edge";
 
 export const alt = DATA.name;
 export const size = {

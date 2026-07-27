@@ -2,7 +2,6 @@
 import { ImageResponse } from "next/og";
 import { getOgAvatar } from "@/lib/og-avatar";
 
-export const runtime = "edge";
 
 export const alt = "Blog";
 export const size = {
